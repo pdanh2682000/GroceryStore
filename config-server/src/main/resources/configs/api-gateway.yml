@@ -1,6 +1,9 @@
 spring:
   cloud:
     gateway:
+      discover:
+        locator:
+          enabled: true
       routes:
         - id: product-service
           uri: lb://product-service

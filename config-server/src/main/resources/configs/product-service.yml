@@ -1,0 +1,70 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/product_service
+    username: root
+    password: duyanh123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: product-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.danhuy.product_service.event
+        # ,com.shop.inventoryservice.event
+
+  # Redis Configuration
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000
+
+# Resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+      productService: # name
+        slidingWindowSize: 5 # trong 5 lần này, 50% bị lỗi trở lên thì circuit breaker sẽ mở (ngắt kết nối).
+        failureRateThreshold: 50 # nếu ≥ 50% request thất bại → circuit sẽ mở (OPEN).
+        waitDurationInOpenState: 5s # đợi 5 giây trước khi chuyển sang trạng thái HALF-OPEN để thử lại.
+        permittedNumberOfCallsInHalfOpenState: 2 # ở trạng thái HALF-OPEN, cho phép thử lại 2 cuộc gọi.
+  retry:
+    instances:
+      productService: # name
+        maxAttempts: 3 # Nếu một cuộc gọi thất bại, sẽ tự động retry tối đa 3 lần (tính cả lần đầu).
+        waitDuration: 1s # Giữa mỗi lần thử lại sẽ chờ 1 giây.
+  timelimiter:
+    instances:
+      productService:
+        timeoutDuration: 2s # Nếu trong 2 giây CompletableFuture không trả kết quả → sẽ bị coi là timeout → gọi fallback.
+
+# Kafka Topics
+kafka:
+  topics:
+    product-created: product-created-topic
+    product-updated: product-updated-topic
+    product-deleted: product-deleted-topic
+    inventory-updated: inventory-updated-topic
+
+# Cache TTL in seconds
+cache:
+  product:
+    ttl: 3600
