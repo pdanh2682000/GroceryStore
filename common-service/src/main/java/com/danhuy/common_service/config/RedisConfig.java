@@ -1,4 +1,4 @@
-package com.danhuy.product_service.config;
+package com.danhuy.common_service.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;

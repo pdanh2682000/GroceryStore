@@ -30,13 +30,6 @@ spring:
         spring.json.trusted.packages: com.danhuy.product_service.event
         # ,com.shop.inventoryservice.event
 
-  # Redis Configuration
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      timeout: 2000
-
 # Resilience4j
 resilience4j:
   circuitbreaker:
@@ -63,8 +56,3 @@ kafka:
     product-updated: product-updated-topic
     product-deleted: product-deleted-topic
     inventory-updated: inventory-updated-topic
-
-# Cache TTL in seconds
-cache:
-  product:
-    ttl: 3600

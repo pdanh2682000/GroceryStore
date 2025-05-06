@@ -69,12 +69,6 @@
       <groupId>org.springframework.kafka</groupId>
     </dependency>
 
-    <!-- Redis -->
-    <dependency>
-      <artifactId>spring-boot-starter-data-redis</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-
     <!-- Database -->
     <dependency>
       <artifactId>mysql-connector-j</artifactId>
@@ -93,6 +87,13 @@
     <dependency>
       <artifactId>jackson-datatype-jsr310</artifactId>
       <groupId>com.fasterxml.jackson.datatype</groupId>
+    </dependency>
+
+    <!-- common -->
+    <dependency>
+      <artifactId>common-service</artifactId>
+      <groupId>com.danhuy</groupId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <!-- Testing -->
