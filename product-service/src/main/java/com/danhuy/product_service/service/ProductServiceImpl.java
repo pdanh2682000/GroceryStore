@@ -1,5 +1,7 @@
 package com.danhuy.product_service.service;
 
+import com.danhuy.common_service.const_enum.MessageEnum;
+import com.danhuy.common_service.exception.ex.AppException;
 import com.danhuy.product_service.cache.ProductCacheService;
 import com.danhuy.product_service.dto.ProductRequest;
 import com.danhuy.product_service.dto.ProductResponse;
@@ -7,7 +9,6 @@ import com.danhuy.product_service.entity.Category;
 import com.danhuy.product_service.entity.Product;
 import com.danhuy.product_service.event.producer.ProductEventProducer;
 import com.danhuy.product_service.repository.ProductRepository;
-import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,8 +41,7 @@ public class ProductServiceImpl implements ProductService {
 
     // Check if product with same name already exists
     if (productRepository.existsByNameIgnoreCase(productRequest.getName())) {
-      throw new IllegalArgumentException(
-          "Product with name " + productRequest.getName() + " already exists");
+      throw new AppException(MessageEnum.PRODUCT_EXISTED);
     }
 
     // Create a new product entity
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     log.info("Updating product with id: {}", id);
 
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+        .orElseThrow(() -> new AppException(MessageEnum.PRODUCT_NOT_EXISTED));
 
     // Update product fields
     product.setName(productRequest.getName());
@@ -111,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
     log.info("Deleting product with id: {}", id);
 
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+        .orElseThrow(() -> new AppException(MessageEnum.PRODUCT_NOT_EXISTED));
 
     // Soft delete - mark as inactive
     product.setActive(false);
@@ -145,10 +145,10 @@ public class ProductServiceImpl implements ProductService {
 
     // If not in cache, get from the repository
     Product product = productRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
+        .orElseThrow(() -> new AppException(MessageEnum.PRODUCT_NOT_EXISTED));
 
     if (!product.isActive()) {
-      throw new EntityNotFoundException("Product with id: " + id + " is not active");
+      throw new AppException(MessageEnum.PRODUCT_NOT_EXISTED);
     }
 
     ProductResponse response = mapToDto(product);

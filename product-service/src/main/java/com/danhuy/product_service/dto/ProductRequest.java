@@ -33,7 +33,7 @@ public class ProductRequest {
 
   private String imageUrl;
 
-  private int stock;
+  private Integer stock;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
   private LocalDate expiry;

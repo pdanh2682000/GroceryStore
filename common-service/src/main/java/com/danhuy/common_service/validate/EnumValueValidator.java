@@ -7,11 +7,13 @@ import java.util.stream.Stream;
 
 public class EnumValueValidator implements ConstraintValidator<EnumValue, CharSequence> {
 
+  private String fieldName;
   private List<String> enumValues;
 
   @Override
   public void initialize(EnumValue constraintAnnotation) {
-    enumValues = Stream.of(constraintAnnotation.enumClass().getEnumConstants()).map(Enum::name)
+    this.fieldName = constraintAnnotation.name();
+    this.enumValues = Stream.of(constraintAnnotation.enumClass().getEnumConstants()).map(Enum::name)
         .toList();
   }
 
@@ -21,7 +23,19 @@ public class EnumValueValidator implements ConstraintValidator<EnumValue, CharSe
     if (charSequence == null) {
       return true;
     }
-    
-    return enumValues.contains(charSequence.toString().toUpperCase());
+
+    boolean isValid = enumValues.contains(charSequence.toString());
+    if (!isValid) {
+      String enumValuesDisplay = String.join(", ", enumValues);
+
+      // custom message
+      constraintValidatorContext.disableDefaultConstraintViolation();
+      constraintValidatorContext.buildConstraintViolationWithTemplate(
+          String.format("%s must be one of the following values: [%s]", fieldName,
+              enumValuesDisplay)
+      ).addConstraintViolation();
+    }
+
+    return isValid;
   }
 }

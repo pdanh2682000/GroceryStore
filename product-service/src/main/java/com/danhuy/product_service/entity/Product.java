@@ -56,7 +56,7 @@ public class Product {
   private boolean isActive = true;
 
   @Column(name = "stock")
-  private int stock = 0;
+  private Integer stock = 0;
 
   @Column(name = "expiry")
   private LocalDate expiry;

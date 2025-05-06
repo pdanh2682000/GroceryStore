@@ -1,12 +1,15 @@
 package com.danhuy.product_service.controller;
 
+import com.danhuy.common_service.const_enum.MessageEnum;
+import com.danhuy.common_service.exception.ex.AppException;
+import com.danhuy.common_service.response.ApiResponse;
+import com.danhuy.common_service.uilts.PagingTransferUtils;
 import com.danhuy.product_service.dto.ProductRequest;
 import com.danhuy.product_service.dto.ProductResponse;
 import com.danhuy.product_service.service.ProductService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,22 +43,33 @@ public class ProductController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<ProductResponse> createProduct(
+  public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
       @Valid @RequestBody ProductRequest productRequest) {
     log.info("Received request to create product: {}", productRequest.getName());
 
     ProductResponse createdProduct = productService.createProduct(productRequest);
-    return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+
+    ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
+    apiResponse.setCode(MessageEnum.CREATE_PRODUCT_SUCCESS.getCode());
+    apiResponse.setMessage(MessageEnum.CREATE_PRODUCT_SUCCESS.getMessage());
+    apiResponse.setResult(createdProduct);
+    return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ProductResponse> updateProduct(
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
       @PathVariable Long id,
       @Valid @RequestBody ProductRequest productRequest) {
     log.info("Received request to update product with id: {}", id);
 
     ProductResponse updatedProduct = productService.updateProduct(id, productRequest);
-    return ResponseEntity.ok(updatedProduct);
+
+    ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
+    apiResponse.setCode(MessageEnum.UPDATE_PRODUCT_SUCCESS.getCode());
+    apiResponse.setMessage(MessageEnum.UPDATE_PRODUCT_SUCCESS.getMessage());
+    apiResponse.setResult(updatedProduct);
+    return ResponseEntity.accepted().body(apiResponse);
   }
 
   @DeleteMapping("/{id}")
@@ -70,15 +84,21 @@ public class ProductController {
   @CircuitBreaker(name = "productService", fallbackMethod = "getProductFallback")
   @Retry(name = "productService")
   @TimeLimiter(name = "productService")
-  public CompletableFuture<ResponseEntity<ProductResponse>> getProduct(@PathVariable Long id) {
+  public CompletableFuture<ResponseEntity<ApiResponse<ProductResponse>>> getProduct(
+      @PathVariable Long id) {
     log.info("Received request to get product with id: {}", id);
 
+    ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
     return CompletableFuture.supplyAsync(() -> {
       try {
         ProductResponse product = productService.getProductById(id);
-        return ResponseEntity.ok(product);
-      } catch (EntityNotFoundException e) {
-        return ResponseEntity.notFound().build();
+        apiResponse.setResult(product);
+        return ResponseEntity.ok(apiResponse);
+      } catch (AppException e) {
+        MessageEnum messageEnum = e.getMessageEnum();
+        apiResponse.setCode(messageEnum.getCode());
+        apiResponse.setMessage(messageEnum.getMessage());
+        return new ResponseEntity(apiResponse, messageEnum.getHttpStatusCode());
       }
     });
   }
@@ -93,7 +113,7 @@ public class ProductController {
   }
 
   @GetMapping
-  public ResponseEntity<Page<ProductResponse>> getAllProducts(
+  public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts(
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size,
       @RequestParam(defaultValue = "id") String sort) {
@@ -102,7 +122,12 @@ public class ProductController {
     Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
     Page<ProductResponse> products = productService.getAllProducts(pageable);
 
-    return ResponseEntity.ok(products);
+    ApiResponse<List<ProductResponse>> apiResponse = new ApiResponse<>();
+    apiResponse.setResult(products.getContent());
+    // meta data
+    apiResponse.setMetadata(PagingTransferUtils.transfersPagingToMetaData(products));
+
+    return ResponseEntity.ok(apiResponse);
   }
 
   @GetMapping("/search")
@@ -111,6 +136,10 @@ public class ProductController {
     log.info("Received request to search products by name: {}", name);
 
     List<ProductResponse> products = productService.searchProductsByName(name);
+
+    ApiResponse<List<ProductResponse>> apiResponse = new ApiResponse<>();
+    apiResponse.setResult(products);
+
     return ResponseEntity.ok(products);
   }
 
@@ -124,7 +153,7 @@ public class ProductController {
   }
 
   @GetMapping("/advanced-search")
-  public ResponseEntity<Page<ProductResponse>> advancedSearch(
+  public ResponseEntity<ApiResponse<List<ProductResponse>>> advancedSearch(
       @RequestParam(required = false) String name,
       @RequestParam(required = false) Long categoryId,
       @RequestParam(required = false) BigDecimal minPrice,
@@ -141,6 +170,11 @@ public class ProductController {
     Page<ProductResponse> products = productService.searchProducts(name, categoryId, minPrice,
         maxPrice, pageable);
 
-    return ResponseEntity.ok(products);
+    ApiResponse<List<ProductResponse>> apiResponse = new ApiResponse<>();
+    apiResponse.setResult(products.getContent());
+    // meta data
+    apiResponse.setMetadata(PagingTransferUtils.transfersPagingToMetaData(products));
+
+    return ResponseEntity.ok(apiResponse);
   }
 }

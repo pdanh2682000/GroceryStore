@@ -23,7 +23,7 @@ public class ProductResponse {
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private boolean isActive;
-  private int stock;
+  private Integer stock;
   private LocalDate expiry;
   private String phoneSupplier;
 
