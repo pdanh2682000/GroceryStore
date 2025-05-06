@@ -12,6 +12,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,6 +54,14 @@ public class Product {
 
   @Column(name = "is_active")
   private boolean isActive = true;
+
+  @Column(name = "stock")
+  private int stock = 0;
+
+  @Column(name = "expiry")
+  private LocalDate expiry;
+
+  private String phoneSupplier;
 
   @PrePersist
   public void prePersist() {

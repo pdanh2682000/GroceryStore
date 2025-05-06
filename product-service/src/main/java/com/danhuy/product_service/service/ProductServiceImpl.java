@@ -78,6 +78,8 @@ public class ProductServiceImpl implements ProductService {
     product.setName(productRequest.getName());
     product.setDescription(productRequest.getDescription());
     product.setPrice(productRequest.getPrice());
+    product.setStock(productRequest.getStock());
+    product.setExpiry(productRequest.getExpiry());
     // Set category if provided
     if (productRequest.getCategoryId() != null) {
       Category category = new Category();
@@ -276,6 +278,9 @@ public class ProductServiceImpl implements ProductService {
     product.setDescription(productRequest.getDescription());
     product.setPrice(productRequest.getPrice());
     product.setImageUrl(productRequest.getImageUrl());
+    product.setStock(productRequest.getStock());
+    product.setExpiry(productRequest.getExpiry());
+    product.setPhoneSupplier(productRequest.getPhoneSupplier());
 
     // Set category if provided
     if (productRequest.getCategoryId() != null) {
@@ -307,6 +312,9 @@ public class ProductServiceImpl implements ProductService {
         .createdAt(product.getCreatedAt())
         .updatedAt(product.getUpdatedAt())
         .isActive(product.isActive())
+        .stock(product.getStock())
+        .expiry(product.getExpiry())
+        .phoneSupplier(product.getPhoneSupplier())
         .build();
   }
 }

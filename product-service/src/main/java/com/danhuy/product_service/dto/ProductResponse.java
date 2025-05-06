@@ -1,6 +1,7 @@
 package com.danhuy.product_service.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,9 @@ public class ProductResponse {
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private boolean isActive;
+  private int stock;
+  private LocalDate expiry;
+  private String phoneSupplier;
 
   @Data
   @Builder
