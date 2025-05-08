@@ -5,6 +5,7 @@ import com.danhuy.common_service.exception.ex.AppException;
 import com.danhuy.common_service.exception.ex.NotFoundException;
 import com.danhuy.common_service.response.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -121,10 +122,11 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ApiResponse<?>> handleAppException(AppException ex) {
     log.error("App exception: {}", ex.getMessage());
     MessageEnum messageEnum = ex.getMessageEnum();
+    Object[] args = ex.getArgsFormated();
 
     ApiResponse<?> apiResponse = new ApiResponse<>();
     apiResponse.setCode(messageEnum.getCode());
-    apiResponse.setMessage(messageEnum.getMessage());
+    apiResponse.setMessage(MessageFormat.format(messageEnum.getMessage(), args));
 
     return ResponseEntity.badRequest().body(apiResponse);
   }

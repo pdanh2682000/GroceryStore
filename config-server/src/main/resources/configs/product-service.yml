@@ -27,8 +27,7 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: com.danhuy.product_service.event
-        # ,com.shop.inventoryservice.event
+        spring.json.trusted.packages: "*"
 
 # Resilience4j
 resilience4j:

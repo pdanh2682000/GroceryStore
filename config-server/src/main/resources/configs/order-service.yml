@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/order_service
+    username: root
+    password: duyanh123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: order-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+# Kafka Topics
+kafka:
+  topics:
+    inventory-check: inventory-check-topic
+    inventory-check-result: inventory-check-result-topic
+    payment-request: payment-request-topic
+    payment-request-result: payment-request-result-topic
+    inventory-update: inventory-update-topic
+    inventory-update-result: inventory-update-result-topic
+    payment-refund: payment-refund-topic
+    payment-refund-result: payment-refund-result-topic
+    notification: notification-topic
