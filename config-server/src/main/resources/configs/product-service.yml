@@ -20,7 +20,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.add.type.headers: false
+        spring.json.add.type.headers: true
     consumer:
       group-id: product-group
       auto-offset-reset: earliest
@@ -47,11 +47,3 @@ resilience4j:
     instances:
       productService:
         timeoutDuration: 2s # Nếu trong 2 giây CompletableFuture không trả kết quả → sẽ bị coi là timeout → gọi fallback.
-
-# Kafka Topics
-kafka:
-  topics:
-    product-created: product-created-topic
-    product-updated: product-updated-topic
-    product-deleted: product-deleted-topic
-    inventory-updated: inventory-updated-topic

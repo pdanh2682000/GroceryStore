@@ -20,7 +20,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.add.type.headers: false
+        spring.json.add.type.headers: true
     consumer:
       group-id: order-group
       auto-offset-reset: earliest
@@ -28,16 +28,3 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
-
-# Kafka Topics
-kafka:
-  topics:
-    inventory-check: inventory-check-topic
-    inventory-check-result: inventory-check-result-topic
-    payment-request: payment-request-topic
-    payment-request-result: payment-request-result-topic
-    inventory-update: inventory-update-topic
-    inventory-update-result: inventory-update-result-topic
-    payment-refund: payment-refund-topic
-    payment-refund-result: payment-refund-result-topic
-    notification: notification-topic

@@ -1,6 +1,6 @@
 package com.danhuy.product_service.event.producer;
 
-import com.danhuy.product_service.const_enum.EventType;
+import com.danhuy.common_service.enums.EventType;
 import com.danhuy.product_service.entity.Product;
 import com.danhuy.product_service.event.ProductEvent;
 import java.time.LocalDateTime;

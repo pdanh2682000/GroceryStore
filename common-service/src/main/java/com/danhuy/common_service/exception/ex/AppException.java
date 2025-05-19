@@ -1,6 +1,6 @@
 package com.danhuy.common_service.exception.ex;
 
-import com.danhuy.common_service.const_enum.MessageEnum;
+import com.danhuy.common_service.enums.MessageEnum;
 import lombok.Getter;
 import lombok.Setter;
 

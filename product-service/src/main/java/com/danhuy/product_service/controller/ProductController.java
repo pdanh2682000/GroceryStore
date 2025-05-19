@@ -1,6 +1,6 @@
 package com.danhuy.product_service.controller;
 
-import com.danhuy.common_service.const_enum.MessageEnum;
+import com.danhuy.common_service.enums.MessageEnum;
 import com.danhuy.common_service.exception.ex.AppException;
 import com.danhuy.common_service.response.ApiResponse;
 import com.danhuy.common_service.uilts.PagingTransferUtils;

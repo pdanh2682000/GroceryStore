@@ -1,6 +1,6 @@
 package com.danhuy.common_service.exception;
 
-import com.danhuy.common_service.const_enum.MessageEnum;
+import com.danhuy.common_service.enums.MessageEnum;
 import com.danhuy.common_service.exception.ex.AppException;
 import com.danhuy.common_service.exception.ex.NotFoundException;
 import com.danhuy.common_service.response.ApiResponse;

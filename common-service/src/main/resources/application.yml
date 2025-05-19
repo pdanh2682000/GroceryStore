@@ -10,3 +10,23 @@ spring:
 cache:
   product:
     ttl: 3600
+
+# Define all Kafka Topics
+kafka:
+  topics:
+    # product
+    product-created: product-created-topic
+    product-updated: product-updated-topic
+    product-deleted: product-deleted-topic
+    # inventory
+    inventory-check: inventory-check-topic
+    inventory-check-result: inventory-check-result-topic
+    inventory-update: inventory-update-topic
+    inventory-update-result: inventory-update-result-topic
+    # payment
+    payment-request: payment-request-topic
+    payment-request-result: payment-request-result-topic
+    payment-refund: payment-refund-topic
+    payment-refund-result: payment-refund-result-topic
+    # notification
+    notification: notification-topic

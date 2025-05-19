@@ -1,6 +1,6 @@
 package com.danhuy.product_service.event;
 
-import com.danhuy.product_service.const_enum.EventType;
+import com.danhuy.common_service.enums.EventType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

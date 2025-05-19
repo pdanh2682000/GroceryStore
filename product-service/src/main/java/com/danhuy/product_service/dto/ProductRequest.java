@@ -1,8 +1,8 @@
 package com.danhuy.product_service.dto;
 
+import com.danhuy.common_service.enums.ModelType;
 import com.danhuy.common_service.validate.EnumValue;
 import com.danhuy.common_service.validate.PhoneNumberFormat;
-import com.danhuy.product_service.const_enum.ModelType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

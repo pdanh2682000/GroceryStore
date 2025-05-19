@@ -1,12 +1,13 @@
 package com.danhuy.order_service.service;
 
-import com.danhuy.common_service.const_enum.MessageEnum;
+import com.danhuy.common_service.enums.MessageEnum;
+import com.danhuy.common_service.enums.PaymentMethod;
+import com.danhuy.common_service.event.OrderCreatedEvent;
 import com.danhuy.common_service.exception.ex.AppException;
 import com.danhuy.order_service.dto.OrderRequest;
 import com.danhuy.order_service.dto.OrderResponse;
 import com.danhuy.order_service.entity.Order;
 import com.danhuy.order_service.entity.OrderItem;
-import com.danhuy.order_service.event.OrderCreatedEvent;
 import com.danhuy.order_service.logic.UpdateOrderStatusLogic;
 import com.danhuy.order_service.repository.OrderRepository;
 import com.danhuy.order_service.saga.SagaOrchestrator;
@@ -50,7 +51,7 @@ public class OrderService {
     List<OrderItem> orderItems = orderRequest.getOrderItems().stream()
         .map(itemDto -> {
           OrderItem item = new OrderItem();
-          item.setProductId(itemDto.getProductId());
+          item.setProductId(itemDto.getProductId().toString());
           item.setQuantity(itemDto.getQuantity());
           item.setPrice(itemDto.getPrice());
           item.setOrder(order);
@@ -69,6 +70,7 @@ public class OrderService {
     orderCreatedEvent.setUserId(savedOrder.getUserId());
     orderCreatedEvent.setOrderItems(orderRequest.getOrderItems());
     orderCreatedEvent.setOrderAmount(savedOrder.getTotalAmount());
+    orderCreatedEvent.setPaymentMethod(PaymentMethod.valueOf(orderRequest.getPaymentMethod()));
 
     // Khởi động saga process
     sagaOrchestrator.startCreateOrderSaga(orderCreatedEvent);

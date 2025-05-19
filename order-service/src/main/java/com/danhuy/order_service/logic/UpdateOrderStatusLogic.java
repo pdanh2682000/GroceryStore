@@ -1,6 +1,6 @@
 package com.danhuy.order_service.logic;
 
-import com.danhuy.common_service.const_enum.MessageEnum;
+import com.danhuy.common_service.enums.MessageEnum;
 import com.danhuy.common_service.exception.ex.AppException;
 import com.danhuy.order_service.entity.Order;
 import com.danhuy.order_service.repository.OrderRepository;
